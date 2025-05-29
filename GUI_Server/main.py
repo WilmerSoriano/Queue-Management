@@ -10,9 +10,8 @@ import socket
 import tkinter as tk
 from threading import Thread
 
-from PIL import Image, ImageTk  # ImageSequence For GIF handling
-
 from device_manager import DeviceManager
+from PIL import Image, ImageTk  # ImageSequence For GIF handling
 from server import udp_server
 
 # Global counter for activation order
