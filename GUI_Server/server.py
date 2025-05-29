@@ -1,6 +1,5 @@
 import re
 from socket import *
-from threading import Thread
 
 from device_manager import DeviceManager
 
