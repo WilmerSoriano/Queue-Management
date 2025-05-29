@@ -5,14 +5,13 @@ import time
 import machine
 import network
 import uos
-
 from button import Button
 from LED import LED
 
 # ==================== Configuration ====================
-SSID = 'PicoTest' #skynet FUTURE UPDATE:skynet CANNOT be hard coded WiFi Password, implement dynamic WiFi
-PASSWORD = 'qwerty123'
-SERVER_IP = "172.20.10.2"  # Verify this IP matches your server! #FUTURE UPDATE: Client must update when connecting to Server
+SSID = '' #skynet FUTURE UPDATE:skynet CANNOT be hard coded WiFi Password, implement dynamic WiFi
+PASSWORD = ''
+SERVER_IP = ""  # Verify this IP matches your server! #FUTURE UPDATE: Client must update when connecting to Server
 SERVER_PORT = 12000
 DEVICE_ID = 20 # Number All device hardcoded and add Sticker to Number each device
 
