@@ -1,7 +1,7 @@
 import machine
 
 
-# UPDATED, LED now handles dynamic color Red and Green
+# UPDATED, LED now handles dynamic color Red, Geen , and Orange
 class LED:
     def __init__(self, pin, active_high=True):
         self.pin = machine.Pin(pin, machine.Pin.OUT)
@@ -16,20 +16,12 @@ class LED:
     def toggle(self):
         self.pin.value(not self.pin.value())
 
-class MultiColorLED:
+class Orange:
     def __init__(self, red_pin, green_pin, active_high=True):
         self.red = LED(red_pin, active_high)
         self.green = LED(green_pin, active_high)
     
-    def red_on(self):
-        self.red.on()
-        self.green.off()
-    
-    def green_on(self):
-        self.red.off()
-        self.green.on()
-    
-    def orange_on(self):
+    def on(self):
         self.red.on()
         self.green.on()
     
