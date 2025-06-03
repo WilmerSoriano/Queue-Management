@@ -8,13 +8,14 @@ SERVER_PORT = 12000
 def udp_server(device_manager: DeviceManager):
     sock = socket(AF_INET, SOCK_DGRAM)
     sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
-    sock.bind(("", SERVER_PORT))
+    sock.bind(("0.0.0.0", SERVER_PORT))
     
     try:
         while True:
             message, addr = sock.recvfrom(2048)
             decoded = message.decode().strip()
-            
+            print(f"Received from {addr}: {decoded}")
+
             # Use to extract device ID and status
             match = re.match(r'ID:(\d+),status:(red|green|off)', decoded, re.IGNORECASE)
             if match:
