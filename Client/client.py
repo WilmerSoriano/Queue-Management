@@ -106,6 +106,8 @@ try:
         green_led.on()
         time.sleep(0.3)
         green_led.off()
+        time.sleep(0.3)
+    green_led.off()
         
     while True:
         # [1] Check for server messages, Server may ask to turn off LED
