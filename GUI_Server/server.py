@@ -1,9 +1,23 @@
+import os
 import re
 from socket import *
 
+import pygame
 from device_manager import DeviceManager
 
 SERVER_PORT = 12000
+
+# Initialize pygame mixer once, to replay music as many times as needed
+pygame.mixer.init()
+
+# Finds the path to sound and plays it.
+def play_notification():
+    sound_path = os.path.join(os.getcwd(), "sound.wav")
+    if os.path.exists(sound_path):
+        pygame.mixer.music.load(sound_path)
+        pygame.mixer.music.play()
+    else:
+        print("Sound file not found.")
 
 def udp_server(device_manager: DeviceManager):
     sock = socket(AF_INET, SOCK_DGRAM)
@@ -34,6 +48,7 @@ def udp_server(device_manager: DeviceManager):
 
                         if status in ['red', 'green']:
                             device_manager.update_device(device_id, status)
+                            play_notification()
                         elif status == 'off':
                             device_manager.set_offline(device_id)
                             
