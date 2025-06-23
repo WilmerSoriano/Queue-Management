@@ -2,7 +2,7 @@
     Queue Management System with Animated Background
     Features:
     - 30-device grid with status colors
-    - Animated GIF background
+    - GIF background
     - UDP server for device communication
 """
 
