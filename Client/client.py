@@ -6,21 +6,22 @@ import machine
 import network
 import uos
 from button import Button
+from DIP import ID_num
 from led import LED, Orange
 
 # ==================== Configuration ====================
-SSID = 'PicoTest'
-PASSWORD = 'qwerty123'
-SERVER_IP = "192.168.4.1"
+SSID = 'skynet' #PicoTest
+PASSWORD = 't3rm1n4t0r' #qwerty123
+SERVER_IP = "192.168.1.73"#192.168.4.1
 SERVER_PORT = 12000
-DEVICE_ID = 20 
+DEVICE_ID = ID_num() 
 
 # Hardware pins (verify these match your wiring)
-GREEN_BUTTON_PIN = 15
-GREEN_LED_PIN = 13
+GREEN_BUTTON_PIN = 7
+GREEN_LED_PIN = 2
 
-RED_BUTTON_PIN = 16
-RED_LED_PIN = 18
+RED_BUTTON_PIN = 26
+RED_LED_PIN = 1
 
 # ==================== WiFi Connection ==================
 def connect_wifi():
