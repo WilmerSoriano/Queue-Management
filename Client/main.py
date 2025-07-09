@@ -17,11 +17,11 @@ SERVER_PORT = 12000
 DEVICE_ID = ID_num() 
 
 # Hardware pins (verify these match your wiring)
-GREEN_BUTTON_PIN = 7
-GREEN_LED_PIN = 2
+GREEN_BUTTON_PIN = 8
+GREEN_LED_PIN = 12
 
-RED_BUTTON_PIN = 26
-RED_LED_PIN = 1
+RED_BUTTON_PIN = 28
+RED_LED_PIN = 15
 
 # ==================== WiFi Connection ==================
 def connect_wifi():
