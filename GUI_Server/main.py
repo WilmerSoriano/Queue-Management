@@ -2,8 +2,9 @@
     Queue Management System with Animated Background
     Features:
     - 30-device grid with status colors
-    - GIF background
+    - Image background
     - UDP server for device communication
+    - Canvas-based boxes with proper font sizing
 """
 
 import socket
@@ -11,13 +12,13 @@ import tkinter as tk
 from threading import Thread
 
 from device_manager import DeviceManager
-from PIL import Image, ImageTk  # ImageSequence For GIF handling
+from PIL import Image, ImageTk
 from server import udp_server
 
 # Global counter for activation order
 activation_counter = 0
 def get_next_order():
-    # Generate sequential activation order for queue prioritization
+    # Generate sequential activation order for queue prioritization (First in, TA Chose => FITC? not FIFO priority)
     global activation_counter
     activation_counter += 1
     return activation_counter
@@ -29,97 +30,144 @@ class GUI:
         self.device_manager = device_manager
         master.title("Queue Management Helper")
         
-        # Animation configuration, no more flickering
-        self.resize_delay = 100  # Debounce time for resizing (ms)
+        # Animation configuration, this prevents jiggles when new Device incoming (Makes it look smooth)
+        self.resize_delay = 100
         self.animation_paused = False
-        self.resize_after_id = None  # Resize event tracker
+        self.resize_after_id = None
         
-        # GIF background setup
+        # Box size parameters (Change as needed)
+        self.box_width = 150  # Initial width in pixels
+        self.box_height = 100  # Initial height in pixels
+        self.font_size = 60  # Initial font size
+        
+        # Background setup
         self.bg_frames = []
-        #self.frame_index = 0
-        self.load_background_frames("bg.jpg")  # Load and process GIF
-        self.current_bg_image = None  # Track current background image
+        self.load_background_frames("bg.jpg")
+        self.current_bg_image = None
 
         # Initialize UI components
         self.create_widgets()
         self.update_display()
         self.update_background()
         self.animate_background()
+        self.update_box_positions()  # Initialize box positions
 
     def load_background_frames(self, path):
-        # Load the image background
         try:
             img = Image.open(path)
             self.original_size = img.size
             self.bg_frames = [img.convert('RGB')]
             self.frame_durations = [100]
-                
         except Exception as e:
             print(f"Error loading Image: {e}")
-            # Fallback to blank image if GIF load fails
             self.bg_frames = [Image.new('RGBA', (100, 100), (0,0,0,0))]
             self.frame_durations = [100]
 
     def create_widgets(self):
         """Create and arrange UI components"""
-        # Main canvas setup
+        # Main canvas
         self.canvas = tk.Canvas(self.master, bg='black', highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
         
-        # Background image container
+        # Background container
         self.bg_container = self.canvas.create_image(0, 0, anchor="nw", tags="bg")
         
-        # Centered frame for device grid
-        self.frame = tk.Frame(self.canvas)
-        #Keep the grid in the center
-        self.frame_id = self.canvas.create_window(self.canvas.winfo_width()//2, self.canvas.winfo_height()//3, window=self.frame, anchor="center")
-
-        # Create device grid (6 columns x 5 rows)
+        # Create device grid (6 columns x 5 rows) as canvas rectangles
         self.boxes = []
+        self.box_texts = []
+        self.box_ids = []
+        
+        # Create boxes with ALL box ID and repective layout (Change as needed)
         for i in range(30):
-            # Compact font, the border size etc...
-            box = tk.Label(self.frame, text=str(i+1), width=12, height=4, borderwidth=3, relief="solid", font=('Arial',16))
-            box.grid(row=i//6, column=i%6, padx=8, pady=6)
-            # Allowes user to left click the box to change color
-            box.bind("<Button-1>", lambda e, bid=i+1: self.press_box(bid))
-            self.boxes.append(box)
+            # We'll position them later
+            box_id = self.canvas.create_rectangle(
+                0, 0, self.box_width, self.box_height,
+                width=3, outline="black", fill="white",
+                tags=f"box_{i+1}"
+            ) # FONT here
+            text_id = self.canvas.create_text(
+                self.box_width/2, self.box_height/2,
+                text=str(i+1), font=('Arial', self.font_size, "bold"),
+                fill="black", tags=f"text_{i+1}"
+            )
+            self.box_ids.append(box_id)
+            self.box_texts.append(text_id)
+            
+            # Bind click event to the box
+            self.canvas.tag_bind(box_id, "<Button-1>", lambda e, bid=i+1: self.press_box(bid))
+            self.canvas.tag_bind(text_id, "<Button-1>", lambda e, bid=i+1: self.press_box(bid))
 
         # Window resize handler
         self.canvas.bind("<Configure>", self.on_resize)
 
-    # =============================== Window Resize Handlers ======================================
     def on_resize(self, event):
-        # Debounce resize events to improve performance
         self.animation_paused = True
         if self.resize_after_id:
             self.master.after_cancel(self.resize_after_id)
         self.resize_after_id = self.master.after(self.resize_delay, self.finish_resize)
-
+    # Updates everything completely with new device incoming
     def finish_resize(self):
-        # Execute after resize debounce delay 
         self.update_background()
-        self.center_frame()
+        self.update_box_positions()
         self.animation_paused = False
 
-    def center_frame(self):
-        # Maintain grid centering after resize
-        self.canvas.coords(self.frame_id, self.canvas.winfo_width()//2, self.canvas.winfo_height()//2)
+    def update_box_positions(self):
+        #Calculate and update box positions based on window size
+        canvas_width = self.canvas.winfo_width()
+        canvas_height = self.canvas.winfo_height()
+         
+         # Do nothing is not changes appear
+        if canvas_width <= 1 or canvas_height <= 1:
+            return
+            
+        # Calculate dynamic box size based on window dimensions
+        self.box_width = max(100, min(200, canvas_width // 8))
+        self.box_height = max(60, min(150, canvas_height // 8))
+        
+        # Calculate font size as a fraction of box height
+        self.font_size = max(14, min(36, int(self.box_height * 0.4)))
+        
+        # Calculate grid layout 
+        cols = 6
+        rows = 5
+        padding = 15
+        
+        # Calculate total grid width and height
+        grid_width = (self.box_width + padding) * cols
+        grid_height = (self.box_height + padding) * rows
+        
+        # Calculate starting position to center the grid
+        start_x = (canvas_width - grid_width) / 2
+        start_y = (canvas_height - grid_height) / 3  # Slightly higher than center
+        
+        # Position all boxes
+        for i in range(30):
+            row = i // cols
+            col = i % cols
+            
+            x1 = start_x + col * (self.box_width + padding)
+            y1 = start_y + row * (self.box_height + padding)
+            x2 = x1 + self.box_width
+            y2 = y1 + self.box_height
+            
+            # Update box position and size
+            self.canvas.coords(self.box_ids[i], x1, y1, x2, y2)
+            
+            # Update text position and size
+            text_x = (x1 + x2) / 2
+            text_y = (y1 + y2) / 2
+            self.canvas.coords(self.box_texts[i], text_x, text_y)
+            # FIX: Update font size for each text item (from feedback)
+            self.canvas.itemconfig(self.box_texts[i], font=('Arial', self.font_size, "bold"))
 
-    # =================== Background Animation System =========================
     def update_background(self):
-        # Resize background frames to current window size
+        # Resize background to current window size
         try:
-            # Get current dimensions with fallback values
             width = self.canvas.winfo_width() or self.original_size[0]
             height = self.canvas.winfo_height() or self.original_size[1]
             
-            # Calculate new size maintaining aspect ratio
-            new_size = (
-                max(int(width), 1),  # Prevent zero-size
-                max(int(height), 1)
-            )
+            new_size = (max(int(width), 1), max(int(height), 1))
             
-            # Resize all frames using fast resampling
             self.resized_frames = []
             for frame in self.bg_frames:
                 resized = frame.resize(new_size, Image.Resampling.NEAREST)
@@ -127,15 +175,13 @@ class GUI:
         except Exception as e:
             print(f"Resize error: {e}")
 
+    # NOTE: this handles the sudden change while mainting background
     def animate_background(self):
-        # Simplified for static image with resize handling
         if not self.animation_paused and hasattr(self, 'resized_frames'):
             try:
                 if self.resized_frames:
                     self.current_bg_image = self.resized_frames[0]
                     self.canvas.itemconfig(self.bg_container, image=self.current_bg_image)
-                
-                # Maintain refresh cycle for resize updates
                 self.master.after(100, self.animate_background)
             except Exception as e:
                 print(f"Background error: {e}")
@@ -143,14 +189,12 @@ class GUI:
         else:
             self.master.after(100, self.animate_background)
 
-    # ========================= Queue Management System ================================
+    # If TA touches on screen value
     def press_box(self, device_id):
-        # Handle device state changes on click
         with self.device_manager.lock:
             device = self.device_manager.devices[device_id]
             current_status = device['status']
             
-            # State transition logic
             if current_status == 'off':
                 new_status = 'green'
                 priority = 'Check Off'
@@ -164,7 +208,6 @@ class GUI:
                 priority = 'Relaxing'
                 device['order'] = None
                 
-            # Update device state
             device['status'] = new_status
             device['priority'] = priority
 
@@ -173,9 +216,10 @@ class GUI:
         if new_status == 'off':
             with self.device_manager.lock:
                 device = self.device_manager.devices[device_id]
-                addr = device.get('address')  # Should be (IP, 12000)
+                addr = device.get('address')
                 last_color = device.get('last_color')
-            
+
+            # If TA press button from screen, tell client to turn of LED
             if addr and last_color:
                 try:
                     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
@@ -185,9 +229,7 @@ class GUI:
                     print(f"Error sending LED_OFF: {e}")
 
     def update_display(self):
-        # Refresh UI elements without jittering/blinking too much 
         with self.device_manager.lock:
-            # Create a snapshot of current device states
             status_snapshot = [
                 (d['status'], d['priority'], d.get('order')) 
                 for d in self.device_manager.devices.values()
@@ -195,7 +237,6 @@ class GUI:
             active = []
             inactive = []
             
-            # Build active/inactive lists
             for idx, (status, _, order) in enumerate(status_snapshot):
                 device_id = idx + 1
                 if status != 'off':
@@ -203,50 +244,70 @@ class GUI:
                 else:
                     inactive.append(device_id)
             
-            # Sort active devices
             active.sort(key=lambda x: x[0])
             ordered_ids = [device_id for _, device_id in active] + inactive
 
-        # Update positions only for changed devices
-        current_positions = {
-            device_id: (self.boxes[device_id-1].grid_info()['row'], self.boxes[device_id-1].grid_info()['column'])
-            for device_id in ordered_ids
-        }
-
-        # Update UI elements
+        # Update box colors and positions
         for new_idx, device_id in enumerate(ordered_ids):
-            target_row = new_idx // 6
-            target_col = new_idx % 6
-            
-            # Only move boxes that need repositioning
-            if current_positions.get(device_id, (-1, -1)) != (target_row, target_col):
-                self.boxes[device_id-1].grid(row=target_row, column=target_col)
-            
-            # Update colors and text regardless of position
             status, priority, _ = status_snapshot[device_id-1]
-
-            # New update, changed the color to something lighter (Feedback)
-            if status == 'red':
-                status = 'Salmon'
-            if status == 'green':
-                status = 'light green'
             
-            color = 'white' if status == 'off' else status
+            # FIX: Update color (based on feedback) 
+            """
+                NOTE! everything else is still using Red and Green
+                Change the color here only to display on Screen.
+            """
+            if status == 'red':
+                fill_color = 'Salmon'
+            elif status == 'green':
+                fill_color = 'light green'
+            else:
+                fill_color = 'white'
                 
-            self.boxes[device_id-1].config(bg=color, text=f" {device_id}")
+            self.canvas.itemconfig(self.box_ids[device_id-1], fill=fill_color)
+            
+            # FIX: Issue where Font did not display correct size 
+            self.canvas.itemconfig(self.box_texts[device_id-1], text=str(device_id))
+            
+            # Update position if needed
+            row = new_idx // 6
+            col = new_idx % 6
+            
+            padding = 15
+            canvas_width = self.canvas.winfo_width()
+            canvas_height = self.canvas.winfo_height()
+            
+            # Calculate total grid width and height
+            grid_width = (self.box_width + padding) * 6
+            grid_height = (self.box_height + padding) * 5
+            
+            # Calculate starting position to center the grid
+            start_x = (canvas_width - grid_width) / 2
+            start_y = (canvas_height - grid_height) / 3
+            
+            # Calculate new position
+            x1 = start_x + col * (self.box_width + padding)
+            y1 = start_y + row * (self.box_height + padding)
+            x2 = x1 + self.box_width
+            y2 = y1 + self.box_height
+            
+            # Move the box
+            self.canvas.coords(self.box_ids[device_id-1], x1, y1, x2, y2)
+            
+            # Move the text
+            text_x = (x1 + x2) / 2
+            text_y = (y1 + y2) / 2
+            self.canvas.coords(self.box_texts[device_id-1], text_x, text_y)
 
-        # Schedule next update (changed from 15000 to 1000ms for better responsiveness)
         self.master.after(1000, self.update_display)
 
+# ======================= MAIN QUEUE ACTION ====================================
     def queue_status(self):
-        # Generate priority-ordered device list, FIFO / directory, so dynamic FIFO without the First Out part
         active = []
         inactive = []
         
         for Id in range(1, 31):
             device = self.device_manager.devices[Id]
             if device['status'] != 'off':
-                # Add activation order if missing
                 if device.get('order') is None:
                     device['order'] = get_next_order()
                 active.append((device['order'], Id))
@@ -254,7 +315,6 @@ class GUI:
                 device['order'] = None
                 inactive.append(Id)
         
-        # Sort by activation order
         active.sort(key=lambda tup: tup[0])
         return [Id for _, Id in active] + inactive
 
@@ -270,7 +330,7 @@ if __name__ == "__main__":
     
     # Create and run GUI
     root = tk.Tk()
-    root.minsize(1200, 1000)  # Minimum window size
-    root.geometry("1024x768")  # Default startup size
+    root.minsize(1000, 800)  # Minimum window size
+    root.geometry("1400x900")  # Default startup size
     gui = GUI(root, dm)
     root.mainloop()
