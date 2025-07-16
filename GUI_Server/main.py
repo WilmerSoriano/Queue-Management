@@ -29,7 +29,7 @@ class GUI:
         self.device_manager = device_manager
         master.title("Queue Management Helper")
         
-        # Animation configuration
+        # Animation configuration, no more flickering
         self.resize_delay = 100  # Debounce time for resizing (ms)
         self.animation_paused = False
         self.resize_after_id = None  # Resize event tracker
@@ -78,8 +78,8 @@ class GUI:
         self.boxes = []
         for i in range(30):
             # Compact font, the border size etc...
-            box = tk.Label(self.frame, text=str(i+1), width=12, height=4, borderwidth=4, relief="solid", font=('Arial',20))
-            box.grid(row=i//6, column=i%6, padx=10, pady=8)
+            box = tk.Label(self.frame, text=str(i+1), width=12, height=4, borderwidth=3, relief="solid", font=('Arial',16))
+            box.grid(row=i//6, column=i%6, padx=8, pady=6)
             # Allowes user to left click the box to change color
             box.bind("<Button-1>", lambda e, bid=i+1: self.press_box(bid))
             self.boxes.append(box)
