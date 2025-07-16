@@ -78,7 +78,7 @@ class GUI:
         self.boxes = []
         for i in range(30):
             # Compact font, the border size etc...
-            box = tk.Label(self.frame, text=str(i+1), width=12, height=4, borderwidth=5, relief="solid", font=('Times New Roman', 12))
+            box = tk.Label(self.frame, text=str(i+1), width=12, height=4, borderwidth=4, relief="solid", font=('Arial',20))
             box.grid(row=i//6, column=i%6, padx=10, pady=8)
             # Allowes user to left click the box to change color
             box.bind("<Button-1>", lambda e, bid=i+1: self.press_box(bid))
@@ -224,8 +224,16 @@ class GUI:
             
             # Update colors and text regardless of position
             status, priority, _ = status_snapshot[device_id-1]
+
+            # New update, changed the color to something lighter (Feedback)
+            if status == 'red':
+                status = 'Salmon'
+            if status == 'green':
+                status = 'light green'
+            
             color = 'white' if status == 'off' else status
-            self.boxes[device_id-1].config(bg=color, text=f"ID: {device_id}\n{priority}")
+                
+            self.boxes[device_id-1].config(bg=color, text=f" {device_id}")
 
         # Schedule next update (changed from 15000 to 1000ms for better responsiveness)
         self.master.after(1000, self.update_display)
@@ -262,7 +270,7 @@ if __name__ == "__main__":
     
     # Create and run GUI
     root = tk.Tk()
-    root.minsize(1000, 800)  # Minimum window size
+    root.minsize(1200, 1000)  # Minimum window size
     root.geometry("1024x768")  # Default startup size
     gui = GUI(root, dm)
     root.mainloop()
