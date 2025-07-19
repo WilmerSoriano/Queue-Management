@@ -12,7 +12,7 @@ from led import LED, Orange
 # ==================== Configuration ====================
 SSID = 'skynet' #PicoTest
 PASSWORD = 't3rm1n4t0r' #qwerty123
-SERVER_IP = "192.168.1.73"#192.168.4.1
+SERVER_IP = "192.168.1.22"#192.168.4.1
 SERVER_PORT = 12000
 DEVICE_ID = ID_num() 
 
