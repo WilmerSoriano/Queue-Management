@@ -4,11 +4,13 @@ A system designed to assist teachers and teaching assistants in efficiently mana
 ---
 ## 📖 Description
 
-The Queue System reduces student wait times and assists TAs in tracking and prioritizing student help requests. Each student station (Raspberry Pi Pico W) is equipped with red/green buttons and an LED indicator; status updates are sent via UDP to a central host (Raspberry Pi 3) that maintains a live queue and displays it through a GUI.
+The Queue System reduces student wait times and assists TAs in tracking and prioritizing student help requests.
+Each student station (Raspberry Pi Pico W) is equipped with red/green buttons and an LED indicator; 
+status updates are sent via UDP to a central host (Raspberry Pi 3) that maintains a live queue and displays it through a GUI.
 ![Queue](assets/Queue.png)
 ![Device](assets/device.png)
----
 
+---
 
 ## System Architecture
 
@@ -63,10 +65,9 @@ The Queue System reduces student wait times and assists TAs in tracking and prio
 
 ---
 
-## 💾 Installation & Setup Server Side
+## 💾 Installation & Setup Server ONLY
 
 ### 1. Update & Install System Packages
-- **NOTE** These are for Server side only (In this case Raspberry Pi 3)
 ```bash
 sudo apt update
 sudo apt install python3-pip
@@ -77,12 +78,13 @@ pip3 install pygame # For sound effect
 ### 2. Configure Host
 - **Static IP** This vary from router to router, but essentially go to your router setting, select
                 the device you wish to set static IP, and have the router reserve that IP.
-                Here more information on why this work[https://www.gendronify.com/how-to-set-a-static-ip/]
+                Here more information on why this work:
+                [https://www.gendronify.com/how-to-set-a-static-ip/]
                 (scroll down to "How to Reserve Static IP in Router Settings")
 
 - **Image/Sound** These can be changed from the folder found in: GUI_Server > sound.wav and bg.jpg
 
-## 💾 Installation & Setup Client Side
+## 💾 Installation & Setup Client ONLY
 
 ### 1. Update & Install System Packages
 - **NOTE** This is Pico-W only. Follow the instruction from the link:
@@ -90,10 +92,13 @@ pip3 install pygame # For sound effect
 
 ### 2. Configure Host
 - **Folder** This repository has all the code for client, just click and drop the folder.
+
    ![PicoW File](assets/thonny.png)
 
-- **Edit** SSID, PASSWORD, and SERVER_IP as needed based on Wifi (You only have to do this once for all devices, IF you have config Static IP correctly)
-   ![Wifi Info](assets/wifi.png)
+- **Edit** SSID, PASSWORD, and SERVER_IP as needed based on Wifi
+           (You'll only have to do this once per devices, ONLY IF, you have config Static IP correctly)
+   
+![Wifi Info](assets/wifi.png)
 
 - **Set** The DIP switch for each station from ID (1 - 30)
    ![Id](assets/dip.jpg)
