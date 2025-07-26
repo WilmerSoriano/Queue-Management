@@ -18,10 +18,10 @@ DEVICE_ID = ID_num()
 
 # Hardware pins (verify these match your wiring)
 GREEN_BUTTON_PIN = 8
-GREEN_LED_PIN = 12
+GREEN_LED_PIN = 12 # smallest leg
 
 RED_BUTTON_PIN = 28
-RED_LED_PIN = 15
+RED_LED_PIN = 15 # 2nd largest leg 
 
 # ==================== WiFi Connection ==================
 def connect_wifi():
