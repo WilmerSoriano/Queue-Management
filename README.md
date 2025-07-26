@@ -1,6 +1,8 @@
 # Queue Management System
 A system designed to assist teachers and teaching assistants in efficiently managing situations where multiple students raise their hands simultaneously.
 
+
+
 ---
 ## 📖 Description
 
@@ -93,7 +95,7 @@ pip3 install pygame # For sound effect
 ### 2. Configure Host
 - **Folder** This repository has all the code for client, just click and drop the folder.
 
-   ![PicoW File](assets/thonny.png)
+![PicoW File](assets/thonny.png)
 
 - **Edit** SSID, PASSWORD, and SERVER_IP as needed based on Wifi
            (You'll only have to do this once per devices, ONLY IF, you have config Static IP correctly)
@@ -101,7 +103,7 @@ pip3 install pygame # For sound effect
 ![Wifi Info](assets/wifi.png)
 
 - **Set** The DIP switch for each station from ID (1 - 30)
-   ![Id](assets/dip.jpg)
+![Id](assets/dip.jpg)
 
 ---
 
@@ -128,7 +130,7 @@ python3 main.py
 
 ---
 
-## Future Plans
+## ✨Future Plans✨
 
 *  There still much work ahead until the queue is at it's best performance. Integration of a setting GUI
    to change background image or sound effect would be nice. Also adding an indication of where the Queue start
