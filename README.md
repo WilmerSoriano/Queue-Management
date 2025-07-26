@@ -1,8 +1,6 @@
 # Queue Management System
 A system designed to assist teachers and teaching assistants in efficiently managing situations where multiple students raise their hands simultaneously.
 
-
-
 ---
 ## 📖 Description
 
@@ -117,8 +115,8 @@ python3 main.py
    * You may also run as editor such as Thonny
 
 ### 2nd. Connect Pico Devices to Outlet
-   * If all the code were added during the setting up process it should run by itself
-   * You see the following:
+   * If all the code were added during the Installation process, it should run by itself.
+   * You'll see the following:
       - 1. LED blinks Orange and stay solid orange indicating it is connecting to Wi-Fi
       - 2. If LED blinks Red, Pico Device failed to connect to Wi-Fi
       - 3. If LED blinks Green, Pico Device is connected to Wi-Fi and ready to use
