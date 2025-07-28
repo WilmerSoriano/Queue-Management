@@ -229,27 +229,16 @@ class GUI:
                     print(f"Error sending LED_OFF: {e}")
 
     def update_display(self):
+        # Get the properly ordered queue (Was using the wrong queue order)
+        ordered_ids = self.queue_status()
+        
+        # Get device statuses for coloring
         with self.device_manager.lock:
-            status_snapshot = [
-                (d['status'], d['priority'], d.get('order')) 
-                for d in self.device_manager.devices.values()
-            ]
-            active = []
-            inactive = []
-            
-            for idx, (status, _, order) in enumerate(status_snapshot):
-                device_id = idx + 1
-                if status != 'off':
-                    active.append((order or float('inf'), device_id))
-                else:
-                    inactive.append(device_id)
-            
-            active.sort(key=lambda x: x[0])
-            ordered_ids = [device_id for _, device_id in active] + inactive
+            status_snapshot = [(d['status'], d['priority']) for d in self.device_manager.devices.values()]
 
         # Update box colors and positions
         for new_idx, device_id in enumerate(ordered_ids):
-            status, priority, _ = status_snapshot[device_id-1]
+            status, priority = status_snapshot[device_id-1]
             
             # FIX: Update color (based on feedback) 
             """
