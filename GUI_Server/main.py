@@ -239,7 +239,7 @@ class GUI:
         # Update box colors and positions
         for new_idx, device_id in enumerate(ordered_ids):
             status, priority = status_snapshot[device_id-1]
-            
+
             # FIX: Update color (based on feedback) 
             """
                 NOTE! everything else is still using Red and Green
@@ -289,7 +289,7 @@ class GUI:
 
         self.master.after(1000, self.update_display)
 
-# ======================= MAIN QUEUE ACTION ====================================
+# ======================= MAIN QUEUE ACTION FI-TAC (First in, TA Chooses)====================================
     def queue_status(self):
         active = []
         inactive = []
@@ -306,7 +306,7 @@ class GUI:
         
         active.sort(key=lambda tup: tup[0])
         return [Id for _, Id in active] + inactive
-
+# =========================================================================================================
 if __name__ == "__main__":
     # Initialize device states
     dm = DeviceManager()
