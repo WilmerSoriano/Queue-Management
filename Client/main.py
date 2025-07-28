@@ -10,13 +10,14 @@ from DIP import ID_num
 from led import LED, Orange
 
 # ==================== Configuration ====================
-SSID = 'skynet' #PicoTest
-PASSWORD = 't3rm1n4t0r' #qwerty123
-SERVER_IP = "192.168.1.22"#192.168.4.1
+SSID = 'CSE Computer Lab Infrastructure'    #'skynet'
+PASSWORD = 'ERB132Infrastructure'           #'t3rm1n4t0r'
+SERVER_IP = "192.168.1.103"                 #"192.168.1.22" # IP address of the Server might vary if WiFi does not set Pi3 static IP
+
 SERVER_PORT = 12000
 DEVICE_ID = ID_num() 
 
-# Hardware pins (verify these match your wiring)
+# Hardware pins (verify these match your wiring to GPIO on Pico-W)
 GREEN_BUTTON_PIN = 8
 GREEN_LED_PIN = 12 # smallest leg
 
