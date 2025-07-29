@@ -8,7 +8,7 @@ The Queue System reduces student wait times and assists TAs in tracking and prio
 Each student station (Raspberry Pi Pico W) is equipped with red/green buttons and an LED indicator; 
 status updates are sent via UDP to a central host (Raspberry Pi 3) that maintains a live queue and displays it through a GUI.
 ![Queue](assets/Queue.png)
-![Device](assets/device.png)
+![Device](assets/device.jpg)
 
 ---
 
