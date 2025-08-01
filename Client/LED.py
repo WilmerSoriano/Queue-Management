@@ -1,6 +1,5 @@
 import machine
 
-
 # UPDATED, LED now handles dynamic color Red, Geen , and Orange
 class LED:
     def __init__(self, pin, active_high=True):
