@@ -133,3 +133,8 @@ python3 main.py
 *  There still much work ahead until the queue is at it's best performance. Integration of a setting GUI
    to change background image or sound effect would be nice. Also adding an indication of where the Queue start
    would be helpful, an Analytic dashboard would be amazing to check waiting time.
+
+---
+
+## DEMO Video
+   [Watch the demo](assets/demo.mp4)
