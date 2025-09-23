@@ -137,4 +137,4 @@ python3 main.py
 ---
 
 ## DEMO Video
-   [Watch the demo](assets/demo.mp4)
+   [Download Video here or Clone repository😊](assets/demo.mp4)
