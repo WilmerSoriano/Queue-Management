@@ -5,7 +5,7 @@ A system designed to assist teachers and teaching assistants in efficiently mana
 👉 [Watch the Demo Video](https://wilmer-portfolio.netlify.app/)
 
 ---
-## 📖 Description
+## Description
 
 The Queue System reduces student wait times and assists TAs in tracking and prioritizing student help requests.
 Each student station (Raspberry Pi Pico W) is equipped with red/green buttons and an LED indicator; 
@@ -108,7 +108,7 @@ pip3 install pygame # For sound effect
 
 ---
 
-## ▶️ Running the System
+## Running the System
 
 ### 1st. Run Server GUI (Raspberry Pi 3)
 
@@ -137,7 +137,3 @@ python3 main.py
    to change background image or sound effect would be nice. Also adding an indication of where the Queue start
    would be helpful, an Analytic dashboard would be amazing to check waiting time.
 
----
-
-## DEMO Video
-   [Download Video here or Clone repository😊](assets/demo.mp4)
