@@ -1,6 +1,9 @@
 # Queue Management System
 A system designed to assist teachers and teaching assistants in efficiently managing situations where multiple students raise their hands simultaneously.
 
+🎥 **Check out the demo video here:**  
+👉 [Watch the Demo Video](https://wilmer-portfolio.netlify.app/)
+
 ---
 ## 📖 Description
 
