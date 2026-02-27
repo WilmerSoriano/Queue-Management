@@ -1,0 +1,7 @@
+Sound Effect Requirements:
+
+1. Copyright Free: The sound effect must be copyright free to prevent legal issues. Only use royalty-free or public domain audio files.
+
+2. File Format: The sound effect must be formatted in sound.wav format for compatibility.
+
+3. You must add the sound effect here in the GUI file.
