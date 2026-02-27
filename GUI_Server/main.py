@@ -17,7 +17,7 @@ from server import udp_server
 
 # Global counter for activation order
 activation_counter = 0
-def get_next_order():
+def get_next_order(): # TO BE UPDATED: Instead of a counter I want to use time.time from device Manager =====================================
     # Generate sequential activation order for queue prioritization (First in, TA Chose => FITC? not FIFO priority)
     global activation_counter
     activation_counter += 1

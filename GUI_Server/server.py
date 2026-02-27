@@ -1,5 +1,5 @@
 import os
-import re
+import re # To read incoming message from client
 from socket import *
 
 import pygame
@@ -20,13 +20,13 @@ def play_notification():
         print("Sound file not found.")
 
 def udp_server(device_manager: DeviceManager):
-    sock = socket(AF_INET, SOCK_DGRAM)
-    sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+    sock = socket(AF_INET, SOCK_DGRAM)          # AF_INET is for IPv4 , and SOCK_DGRAM is for UDP protocol is used
+    sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1) # Makes sure to tell other device only 'server' can reuse this address
     sock.bind(("0.0.0.0", SERVER_PORT))
     
     try:
         while True:
-            message, addr = sock.recvfrom(2048)
+            message, addr = sock.recvfrom(2048) # ISSUE/FIX: What if 2 user send a message at same time? RECVFROM will read 1 packet at a time. NOTE: This can also based on OS Queue socket buffer, no sokcet collision!
             decoded = message.decode().strip()
             print(f"Received from {addr}: {decoded}")
 
@@ -34,7 +34,7 @@ def udp_server(device_manager: DeviceManager):
             match = re.match(r'ID:(\d+),status:(red|green|off)', decoded, re.IGNORECASE)
             if match:
                 try:
-                    device_id = int(match.group(1))
+                    device_id = int(match.group(1)) # Grabs ID and Status color only
                     status = match.group(2).lower()
                     
                     if 1 <= device_id <= 30:
